@@ -2,14 +2,11 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AppointmentService } from '../../appointment.service';
 import { ActivatedRoute } from '@angular/router';
 
-// Interface Doctor
-interface Doctor {
-  user: {
-    userId: number;
-    fullName: string;
-    // ... outras propriedades do usuário ...
-  };
-  // ... outras propriedades do médico ...
+interface Aluno {
+  id: number;
+  nome: string;
+  status: string;
+  resultado: string;
 }
 
 @Component({
@@ -18,68 +15,62 @@ interface Doctor {
   styleUrls: ['./appointment-create.component.css']
 })
 
-
 export class AppointmentCreateComponent implements OnInit {
+  mensagemAluno: string = '';
+  selectedAlunoId: number | null = null;
+  alunos: Aluno[] = [];
+  selectedAlunoNome: string = '';
 
-  patientMessage: string = '';
-  selectedDoctorUserId: number | null = null;
-  doctors: Doctor[] = [];
-  selectedDoctorFullName: string = '';
-  doctorId=1;
+  constructor(private appointmentService: AppointmentService, private cdr: ChangeDetectorRef, private route: ActivatedRoute) {}
 
-  constructor(private appointmentService: AppointmentService, private cdr: ChangeDetectorRef,   private route: ActivatedRoute,) {}
   ngOnInit(): void {
-    this.loadDoctors();
+    this.loadAlunos();
 
-    // Obtendo o ID do médico do parâmetro da rota
+    // Obtendo o ID do aluno do parâmetro da rota
     this.route.params.subscribe(params => {
-        this.selectedDoctorUserId = +params['doctorId']; // O "+" converte a string em número
+      this.selectedAlunoId = +params['alunoId'];
     });
-}
+  }
 
-
-  onDoctorSelected() {
-    const selectedDoctor = this.doctors.find(doc => doc.user.userId === this.selectedDoctorUserId);
-    if (selectedDoctor) {
-      this.selectedDoctorFullName = selectedDoctor.user.fullName;
-      console.log("Doctor selected:", this.selectedDoctorFullName);
+  onAlunoSelected() {
+    const selectedAluno = this.alunos.find(alu => alu.id === this.selectedAlunoId);
+    if (selectedAluno) {
+      this.selectedAlunoNome = selectedAluno.nome;
+      console.log("Aluno selected:", this.selectedAlunoNome);
     } else {
-      console.log("No doctor found with the given ID.");
+      console.log("No aluno found with the given ID.");
     }
   }
 
-  
-
-  loadDoctors(): void {
-    this.appointmentService.getDoctors().subscribe(
-      (doctorsList: Doctor[]) => {
-        this.doctors = doctorsList;
-        console.log('Doctors set in the component:', this.doctors);
+  loadAlunos(): void {
+    this.appointmentService.getAllAlunos().subscribe(
+      (alunos: Aluno[]) => {
+        this.alunos = alunos;
       },
-      error => console.error('Error fetching doctors:', error)
+      error => console.error('Error fetching alunos:', error)
     );
   }
 
-onSubmit(): void {
-  console.log('Selected Doctor ID:', this.selectedDoctorUserId);
-  console.log('Patient Message:', this.patientMessage);
-
-  if (this.selectedDoctorUserId && this.patientMessage) {
-    this.createApp(this.selectedDoctorUserId);
-  } else {
-    alert('Both doctor and patientMessage are required.');
+  onSubmit(): void {
+    if (this.selectedAlunoId && this.mensagemAluno) {
+      this.createEntrevista();
+    } else {
+      alert('Ambos aluno e mensagemAluno são necessários.');
+    }
   }
-}
 
+  createEntrevista(): void {
+    let entrevista = {
+      alunoId: this.selectedAlunoId
+      // ... outras propriedades da entrevista se necessário ...
+    };
 
-  createApp(doctorId: number): void {
-    this.appointmentService.createAppointment(doctorId.toString(), this.patientMessage)
+    this.appointmentService.createEntrevista(entrevista, this.selectedAlunoId!)
       .subscribe(
         () => {
-          alert('Appointment created successfully!');
+          alert('Entrevista criada com sucesso!');
         },
-        (error) => alert('Error creating appointment: ' + error.message)
+        (error) => alert('Erro ao criar entrevista: ' + error.message)
       );
   }
-
 }

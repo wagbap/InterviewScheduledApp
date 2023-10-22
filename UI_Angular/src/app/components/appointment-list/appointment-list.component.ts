@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core'; // Removido ChangeDetectorRef
-import { AppointmentService } from '../../appointment.service';
+import { Aluno, AppointmentService } from '../../appointment.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { interval } from 'rxjs';
 
-interface Doctor {
-  user: {
-    userId: number;
-    fullName: string;
-  };
-  // ... outras propriedades ...
+export interface Entrevista {
+  id: number;
+  empresa: string;
+  dataPrimeiroContacto: Date;
+  dataEntrevista: Date;
+  vagaDisponivel: number;
+  alunoId: number;
 }
 
 @Component({
@@ -16,14 +17,14 @@ interface Doctor {
   templateUrl: './appointment-list.component.html',
   styleUrls: ['./appointment-list.component.css']
 })
+
+
 export class AppointmentListComponent implements OnInit {
-  appointmentId: string = '';
-  appointments: any[] = [];
-  AppointId: number = 0;
-  userType: string = 'Patient';
-  currentUserFullName: string = 'Current User';
-  selectedDoctorUserId: number | null = null;
-  doctors: Doctor[] = [];
+  entrevistaId: string = '';
+  alunoId: number = 0;
+  selectedAlunoId: number | null = null;
+  alunos: Aluno[] = [];
+  entrevistas: Entrevista[] = [];
 
   constructor(
     private appointmentService: AppointmentService, 
@@ -33,18 +34,18 @@ export class AppointmentListComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkToken();
-    setInterval(() => {
-      this.fetchAppointments();
-    }, 500);
+    interval(500).subscribe(() => {
+      this.fetchAlunos();
+    });
 
     this.route.params.subscribe(params => {
-      this.selectedDoctorUserId = +params['doctorId'];
+      this.selectedAlunoId = +params['alunoId'];
     });
   }
 
-  setSelectedDoctorId(doctorId: number): void {
-    this.selectedDoctorUserId = doctorId;
-    this.router.navigate(['/createAppointment', doctorId]);
+  setSelectedAlunoId(alunoId: number): void {
+    this.selectedAlunoId = alunoId;
+    this.router.navigate(['/createEntrevista', alunoId]);
   }
 
   checkToken(): void {
@@ -53,56 +54,24 @@ export class AppointmentListComponent implements OnInit {
       console.error('No token found!');
       this.router.navigate(['/login']);
     } else {
-      this.fetchAppointments();
+      this.fetchAlunos();
     }
   }
 
-  onSubmit(): void {
-    if (this.appointmentId) {
-      const appointmentIdNumber = Number(this.appointmentId);
-      if (isNaN(appointmentIdNumber)) {
-        alert('Appointment ID must be a valid number.');
-        return;
-      }
-      this.finishAppointment(appointmentIdNumber);
-    } else {
-      alert('Appointment ID is required.');
-    }
-  }
-
-  fetchAppointments(): void {
-    this.appointmentService.getAppointmentsById().subscribe(
-      (appointments: any[]) => {
-        this.appointments = appointments;
-        if (appointments.length > 0) {
-          this.AppointId = appointments[appointments.length - 1].id;
+  fetchAlunos(): void {
+    this.appointmentService.getAllAlunos().subscribe(
+      (alunos: Aluno[]) => {
+        this.alunos = alunos;
+        if (alunos.length > 0) {
+          this.alunoId = alunos[alunos.length - 1].id;
         }
       },
-      error => console.error('Error fetching appointments:', error)
+      error => console.error('Error fetching alunos:', error)
     );
   }
-
-  finishAppointment(appointmentId: number): void { 
-    this.appointmentService.finishAppointment(appointmentId).subscribe(
-      () => {
-        alert('Appointment finalizado com sucesso!');
-        this.fetchAppointments();
-      },
-      error => {
-        if (error.message.includes('You dont have permition')) {
-          alert('Você não tem permissão para finalizar este compromisso. Apenas doutores podem fazer isso.');
-        } else {
-          alert('Erro ao finalizar o compromisso: ' + error.message);
-        }
-      }
-    );
-  } 
-
 
   logout(): void {
     localStorage.removeItem('token');
-    // Se necessário, redirecione o usuário para a página de login ou qualquer outra página.
-      this.router.navigate(['/login']);
-   }
-
+    this.router.navigate(['/login']);
+  }
 }

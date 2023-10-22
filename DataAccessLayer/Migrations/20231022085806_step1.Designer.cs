@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ClinicaDbContext))]
-    [Migration("20231022072340_step1")]
+    [Migration("20231022085806_step1")]
     partial class step1
     {
         /// <inheritdoc />
@@ -353,12 +353,12 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             UserId = 1,
-                            CreationDate = new DateTime(2023, 10, 22, 7, 23, 40, 45, DateTimeKind.Utc).AddTicks(6421),
-                            DateATT = new DateTime(2023, 10, 22, 7, 23, 40, 45, DateTimeKind.Utc).AddTicks(6427),
+                            CreationDate = new DateTime(2023, 10, 22, 8, 58, 6, 200, DateTimeKind.Utc).AddTicks(9322),
+                            DateATT = new DateTime(2023, 10, 22, 8, 58, 6, 200, DateTimeKind.Utc).AddTicks(9327),
                             Email = "superadmin@example.com",
                             FullName = "Super Admin",
                             IsDeleted = false,
-                            Password = "$2b$10$vR5G4GQLLU9kBR6NBbie7e0d78N/YVJ6MpaJlMCNQe/nY3rnszaAm",
+                            Password = "$2b$10$VgbV4feFXlHElhHtqQzzUu7CQEE4GDtW.3tFzpAhHQDywDQQAA.Ti",
                             Status = 1,
                             UserType = 3
                         });
@@ -439,7 +439,7 @@ namespace DataAccessLayer.Migrations
             modelBuilder.Entity("DataAccessLayer.Model.Entrevista", b =>
                 {
                     b.HasOne("DataAccessLayer.Model.Aluno", "Aluno")
-                        .WithMany("Entrevistas")
+                        .WithMany()
                         .HasForeignKey("AlunoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -478,11 +478,6 @@ namespace DataAccessLayer.Migrations
                         .IsRequired();
 
                     b.Navigation("Disease");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Model.Aluno", b =>
-                {
-                    b.Navigation("Entrevistas");
                 });
 #pragma warning restore 612, 618
         }

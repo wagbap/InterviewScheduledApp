@@ -32,7 +32,7 @@ namespace DataAccessLayer.Data
                 UserId = 1,
                 FullName = "Super Admin",
                 Email = "superadmin@example.com",
-                Password = "*********************".GerarHash(),
+                Password = "SuperSecurePassword".GerarHash(),
                 UserType = UserTypeEnum.SuperAdmim,  
                 Status = 1, 
                 CreationDate = DateTime.UtcNow,

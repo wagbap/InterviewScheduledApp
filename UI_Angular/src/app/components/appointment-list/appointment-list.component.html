@@ -483,56 +483,39 @@
   </nav>
 </div>
 
-<section class="section dashboard">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="row">
-        <!-- ... Seus outros cards de Sales, Revenue, etc ... -->
+<!-- ... Outras partes do seu HTML ... -->
 
-        <!-- Recent Sales -->
-        <div class="col-12">
-          <div class="card recent-sales overflow-auto">
-            <div class="card-body">
-              <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+<div class="col-12">
+  <div class="card recent-students overflow-auto">
+    <div class="card-body">
+      <h5 class="card-title">Lista de Alunos</h5>
 
-              <table class="table table-borderless">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col" *ngIf="userType == 'Patient'">Doctor Name</th>
-                    <th scope="col" *ngIf="userType == 'Doctor'">Patient Name</th>
-                    <th scope="col">Doctor Message</th>
-                    <th scope="col">{{ userType == 'Patient' ? currentUserFullName + ' - Message' : 'Patient Message' }}</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Options</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let appoint of appointments">
-                    <td><a href="#">{{ appoint.appointId }}</a></td>
-                    <td *ngIf="userType == 'Patient'">{{ appoint.doctor.fullName }}</td>
-                    <td *ngIf="userType == 'Doctor'">{{ appoint.patient.fullName }}</td>
-                    <td><a href="#" class="text-primary">{{ appoint.doctorMsg }}</a></td>
-                    <td><a href="#" class="text-primary">{{ appoint.patientMsg }}</a></td>
-                    <td>{{ appoint.price }} EUR</td>
-                    <td>
-                 
-                      <a class="badge" (click)="finishAppointment(appoint.appointId)" [ngClass]="{'border-success border-1 text-success': appoint.isCompleted, 'border-warning border-1 text-warning': !appoint.isCompleted}" style="cursor: pointer">
-                        {{ appoint.isCompleted ? 'Finished' : 'In progress' }}
-                      </a>
-                    </td>
-                    <td><a (click)="setSelectedDoctorId(appoint.doctor.userId)" class="badge bg-primary" style="cursor: pointer;color:aliceblue;">Make a appointment...</a></td>
-
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+      <table class="table table-borderless">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Status</th>
+            <th scope="col">Resultado</th>
+            <th scope="col">Acção</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let aluno of alunos">
+            <td><a href="#">{{ aluno.id }}</a></td>
+            <td>{{ aluno.nome }}</td>
+            <td>{{ aluno.status }}</td>
+            <td>{{ aluno.resultado }}</td>
+            <td><a (click)="setSelectedAlunoId(aluno.id)" class="badge bg-primary" style="cursor: pointer;color:aliceblue;font-size: 14px;padding:8px;">Agendar entrevista...</a></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-</section>
+</div>
+
+<!-- ... Restante do seu HTML ... -->
+
+
 
   </div>

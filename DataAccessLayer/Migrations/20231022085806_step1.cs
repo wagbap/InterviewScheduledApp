@@ -229,7 +229,7 @@ namespace DataAccessLayer.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "UserId", "CreationDate", "DateATT", "Discriminator", "Email", "FullName", "IsDeleted", "Password", "PhoneNumber", "Status", "UserType" },
-                values: new object[] { 1, new DateTime(2023, 10, 22, 7, 23, 40, 45, DateTimeKind.Utc).AddTicks(6421), new DateTime(2023, 10, 22, 7, 23, 40, 45, DateTimeKind.Utc).AddTicks(6427), "UserModel", "superadmin@example.com", "Super Admin", false, "$2b$10$vR5G4GQLLU9kBR6NBbie7e0d78N/YVJ6MpaJlMCNQe/nY3rnszaAm", null, 1, 3 });
+                values: new object[] { 1, new DateTime(2023, 10, 22, 8, 58, 6, 200, DateTimeKind.Utc).AddTicks(9322), new DateTime(2023, 10, 22, 8, 58, 6, 200, DateTimeKind.Utc).AddTicks(9327), "UserModel", "superadmin@example.com", "Super Admin", false, "$2b$10$VgbV4feFXlHElhHtqQzzUu7CQEE4GDtW.3tFzpAhHQDywDQQAA.Ti", null, 1, 3 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Appointments_DoctorUserId",

@@ -17,7 +17,7 @@ const routes: Routes = [
     { path: 'login', component: DashBoardComponent },
     { path: 'registarDoctor', component: AppointmentEditComponent },
     { path: 'appointments', component: AppointmentListComponent },
-    { path: 'createAppointment/:doctorId', component: AppointmentCreateComponent },
+    { path: 'createEntrevista/:alunoId', component: AppointmentCreateComponent },
     { path: 'sendMessage', component: AppointmentDeleteComponent },
     { path: 'login', loadChildren: () => import('./dash-board/dash-board.module').then(m => m.DashboardModule) },
 ];

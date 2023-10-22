@@ -29,6 +29,25 @@ interface  DoctorModel {
 }
 
 
+export interface Aluno {
+  id: number;
+  nome: string;
+  status: string;
+  resultado: string;
+  entrevistas?: Entrevista[];
+}
+
+export interface Entrevista {
+  id: number;
+  empresa: string;
+  dataPrimeiroContacto: Date;
+  dataEntrevista: Date;
+  vagaDisponivel: number;
+  alunoId: number;
+}
+
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +55,9 @@ interface  DoctorModel {
 export class AppointmentService {
   private apiUrl_Appointment = 'http://localhost:5242/Appointments';
   private apiUrl_Users = 'http://localhost:5242/Users';
+  private apiUrl_Aluno = 'http://localhost:5242/api/Aluno';
+  private apiUrl_Entrevista = 'http://localhost:5242/api/Entrevista';
+
   private AppointId = null;
 
   constructor(private http: HttpClient) {}
@@ -48,6 +70,63 @@ export class AppointmentService {
   }
 
 
+  // Métodos para Aluno
+  getAllAlunos(): Observable<Aluno[]> {
+    return this.http.get<Aluno[]>(`${this.apiUrl_Aluno}`, { headers: this.getHeaders() })
+      .pipe(
+        tap(data => console.log('All Alunos:', data)),
+        catchError(this.handleError)
+      );
+  }
+
+  getAlunoById(id: number): Observable<Aluno> {
+    return this.http.get<Aluno>(`${this.apiUrl_Aluno}/${id}`, { headers: this.getHeaders() })
+      .pipe(
+        tap(data => console.log('Aluno by id:', data)),
+        catchError(this.handleError)
+      );
+  }
+
+  // Métodos para Entrevista
+  getAllEntrevistas(): Observable<Entrevista[]> {
+    return this.http.get<Entrevista[]>(`${this.apiUrl_Entrevista}`, { headers: this.getHeaders() })
+      .pipe(
+        tap(data => console.log('All Entrevistas:', data)),
+        catchError(this.handleError)
+      );
+  }
+
+  getEntrevistaById(id: number): Observable<Entrevista> {
+    return this.http.get<Entrevista>(`${this.apiUrl_Entrevista}/${id}`, { headers: this.getHeaders() })
+      .pipe(
+        tap(data => console.log('Entrevista by id:', data)),
+        catchError(this.handleError)
+      );
+  }
+
+  createEntrevista(entrevista: Entrevista, alunoId: number): Observable<Entrevista> {
+    const params = new HttpParams().set('alunoId', alunoId.toString());
+    return this.http.post<Entrevista>(`${this.apiUrl_Entrevista}`, entrevista, { headers: this.getHeaders(), params: params })
+      .pipe(
+        tap(data => console.log('Entrevista created:', data)),
+        catchError(this.handleError)
+      );
+  }
+
+  updateEntrevista(entrevista: Entrevista): Observable<Entrevista> {
+    return this.http.put<Entrevista>(`${this.apiUrl_Entrevista}/${entrevista.id}`, entrevista, { headers: this.getHeaders() })
+      .pipe(
+        tap(data => console.log('Entrevista updated:', data)),
+        catchError(this.handleError)
+      );
+  }
+
+
+
+
+
+
+  
   
   createAppointment(doctorId: string, PatientMsg: string): Observable<any> {
     const params = new HttpParams()
