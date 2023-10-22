@@ -1,0 +1,13 @@
+<p>appointment-create works!</p>
+
+<form (submit)="onSubmit()">
+  <!-- Input escondido do ID do médico -->
+  <input type="hidden" [(ngModel)]="selectedDoctorUserId" name="selectedDoctorUserId">
+
+  <label>
+    Message:
+    <textarea [(ngModel)]="patientMessage" name="patientMessage"></textarea>
+  </label>
+
+  <button type="submit">Create Appointment</button>
+</form>

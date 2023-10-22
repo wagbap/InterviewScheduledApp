@@ -1,0 +1,7 @@
+<p>appointment-edit works!</p>
+
+<form #doctorForm="ngForm" (ngSubmit)="onSubmit(doctorForm)">
+    <input type="text" name="fullName" [(ngModel)]="doctor.fullName" required>
+    <!-- similar bindings for other fields -->
+    <button type="submit" [disabled]="!doctorForm.valid">Submit</button>
+</form>
