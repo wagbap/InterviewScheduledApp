@@ -9,6 +9,7 @@ import { AppointmentModule } from './dash-board/Appointment-module';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms'; //
 import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Componentes adicionados pelo seu colega
 import { LandPageComponent } from './land-page/land-page.component';
@@ -27,10 +28,15 @@ import { DashLandComponent } from './dash-land/dash-land.component';
     AppRoutingModule,
     HttpClientModule,
     AppointmentModule,
+    BrowserAnimationsModule, // required animations module
     FormsModule,  // Adicione esta linha
     ReactiveFormsModule , // <-- Adição aqui
-    ToastrModule.forRoot()
-
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-top-left',
+      preventDuplicates: true,
+    })
+    
   ],
   bootstrap: [AppComponent]
 })

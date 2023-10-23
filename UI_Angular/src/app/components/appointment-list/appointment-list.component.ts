@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core'; // Removido ChangeDetectorRef
-import { Aluno, AppointmentService } from '../../appointment.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { AppointmentService } from '../../appointment.service';
+import { Aluno } from '../../appointment.service';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { interval } from 'rxjs';
+
 
 export interface Entrevista {
   id: number;
@@ -11,6 +16,8 @@ export interface Entrevista {
   vagaDisponivel: number;
   alunoId: number;
 }
+
+
 
 @Component({
   selector: 'app-appointment-list',
@@ -25,28 +32,64 @@ export class AppointmentListComponent implements OnInit {
   selectedAlunoId: number | null = null;
   alunos: Aluno[] = [];
   entrevistas: Entrevista[] = [];
+  private intervalSubscription?: Subscription;
 
-  constructor(
-    private appointmentService: AppointmentService, 
-    private route: ActivatedRoute, 
-    private router: Router
-  ) {}
 
+  constructor(public appointmentService: AppointmentService, private toastr: ToastrService,  private router: Router, ) { }
+
+    
+  onSubmit(form: NgForm) {
+    if (form.valid) {
+        if (!this.appointmentService.formData_Aluno.id || this.appointmentService.formData_Aluno.id == 0) {
+            this.createAluno(form);
+        } else {
+            this.updateAluno(form);
+        }
+    }
+  }
+      
   ngOnInit(): void {
     this.checkToken();
-    interval(500).subscribe(() => {
-      this.fetchAlunos();
-    });
+    this.appointmentService.fetchStudents();
+    this.appointmentService.refreshListAluno();
+    this.startPolling();
+    
+  }
 
-    this.route.params.subscribe(params => {
-      this.selectedAlunoId = +params['alunoId'];
+  user = {
+    fullName:""
+  };
+  
+
+  startPolling(): void {
+    this.intervalSubscription = interval(500).subscribe(() => {
+  
+      console.log('Current alunoId:', this.appointmentService.formData.alunoId);
     });
   }
 
-  setSelectedAlunoId(alunoId: number): void {
-    this.selectedAlunoId = alunoId;
-    this.router.navigate(['/createEntrevista', alunoId]);
+  ngOnDestroy(): void {
+    if (this.intervalSubscription) {
+      this.intervalSubscription.unsubscribe();
+    }
   }
+    
+    
+    getStudentName(alunoId?: number): string {
+      if (!alunoId) return ''; // If alunoId is not provided, return an empty string
+    
+      const student = this.appointmentService.students.find(s => s.id === alunoId);
+      return student ? student.nome : '';
+    }
+    
+    getStudentNameById(alunoId?: number): string {
+      if (!alunoId) {
+        return 'N/A';
+      }
+      const student = this.appointmentService.students.find(s => s.id === alunoId);
+      return student ? student.nome : 'N/A';
+    }
+    
 
   checkToken(): void {
     const token = localStorage.getItem('token');
@@ -68,6 +111,55 @@ export class AppointmentListComponent implements OnInit {
       },
       error => console.error('Error fetching alunos:', error)
     );
+  }
+
+  populateForm(selectedRecord: Aluno) {
+    this.appointmentService.formData_Aluno = Object.assign({}, selectedRecord);
+  }
+
+  onDelete(id: number) {
+    if (confirm('Are you sure to delete this record?')) {
+      this.appointmentService.deleteAluno(id).subscribe({
+        next: res => {
+          this.appointmentService.getAllAlunos(); // Refresh the list of students
+          this.toastr.error('Deleted successfully', 'Aluno Register', );
+
+          
+        },
+        error: err => {
+          console.log(err);
+        }
+      });
+    }
+  }
+
+
+  createAluno(form: NgForm) {
+    this.appointmentService.createAluno(this.appointmentService.formData_Aluno).subscribe({
+      next: res => {
+        this.appointmentService.getAllAlunos(); // Refresh the list of students
+        this.appointmentService.formData_Aluno = new Aluno(); // Reset the form data
+        form.resetForm();
+        this.toastr.success('Created successfully', 'Aluno Register');
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
+
+  updateAluno(form: NgForm) {
+    this.appointmentService.updateAluno(this.appointmentService.formData_Aluno.id, this.appointmentService.formData_Aluno).subscribe({
+      next: res => {
+        this.appointmentService.getAllAlunos(); // Refresh the list of students
+        this.appointmentService.formData_Aluno = new Aluno(); // Reset the form data
+        form.resetForm();
+        this.toastr.success('Updated successfully', 'Aluno Register', { positionClass: 'toast-top-left' });
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
   logout(): void {

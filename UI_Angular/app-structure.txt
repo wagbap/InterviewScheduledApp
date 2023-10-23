@@ -1,0 +1,18 @@
+src
+├── app
+│   ├── components
+│   │   ├── alunos-components
+│   │   └── entrevista-components
+│   │       
+│   ├── dash-board
+│   │   
+│   ├── dash-board
+│   │ 
+│   └── land-page
+│
+├──api.service (autentication token)
+│
+├──api.service-crud (all endpoints)
+│
+├── styles.css (global css rules)
+└── index.html (cdn path for bootstrap & fa icons)

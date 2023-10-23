@@ -69,6 +69,14 @@ builder.Logging.AddSerilog(logger);
 
 
 
+builder.Services.AddCors(options => options.AddPolicy(name: "SuperHeroOrigins",
+    policy =>
+    {
+        policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+    }));
+
+
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -202,7 +210,7 @@ app.Use((context, next) =>
     return next();
 });
 
-
+app.UseCors("SuperHeroOrigins");
 
 app.UseAuthentication();
 

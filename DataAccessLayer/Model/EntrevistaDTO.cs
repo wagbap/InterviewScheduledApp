@@ -16,10 +16,10 @@ namespace DataAccessLayer.Model
         public string Empresa { get; set; }
 
         [Required(ErrorMessage = "O campo DataPrimeiroContacto é obrigatório.")]
-        public DateTime DataPrimeiroContacto { get; set; }
+        public string DataPrimeiroContacto { get; set; }
 
         [Required(ErrorMessage = "O campo DataEntrevista é obrigatório.")]
-        public DateTime DataEntrevista { get; set; }
+        public string DataEntrevista { get; set; }
 
         [Required(ErrorMessage = "O campo VagaDisponivel é obrigatório.")]
         public int VagaDisponivel { get; set; }

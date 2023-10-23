@@ -36,8 +36,8 @@ namespace eConsultas_API.Controllers
             return Ok(entrevista);
         }
 
-        [HttpPost("{alunoId}")]
-        public IActionResult Create(int alunoId, EntrevistaDTO model)
+        [HttpPost]
+        public IActionResult Create(int alunoId, [FromBody] EntrevistaDTO model)
         {
             if (!_entrevistaRepository.AlunoExists(alunoId))
             {
@@ -51,8 +51,8 @@ namespace eConsultas_API.Controllers
         }
 
 
-        [HttpPut("{alunoId}/{id}")]
-        public IActionResult Update(int alunoId, int id, EntrevistaDTO model)
+        [HttpPut]
+        public IActionResult Update(int alunoId, int id, [FromBody] EntrevistaDTO model)
         {
             if (!_entrevistaRepository.AlunoExists(alunoId))
             {
