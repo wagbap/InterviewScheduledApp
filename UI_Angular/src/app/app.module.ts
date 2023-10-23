@@ -31,11 +31,7 @@ import { DashLandComponent } from './dash-land/dash-land.component';
     BrowserAnimationsModule, // required animations module
     FormsModule,  // Adicione esta linha
     ReactiveFormsModule , // <-- Adição aqui
-    ToastrModule.forRoot({
-      timeOut: 3000,
-      positionClass: 'toast-top-left',
-      preventDuplicates: true,
-    })
+    ToastrModule.forRoot({})
     
   ],
   bootstrap: [AppComponent]

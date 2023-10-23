@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { AppointmentService } from '../../appointment.service';
+import { AppointmentService } from '../../api-crud.service';
 import { UserModel } from '../../user.model';
-import { EntrevistaDTO } from '../../appointment.service';
+import { EntrevistaDTO } from '../../api-crud.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { interval } from 'rxjs';
@@ -71,7 +71,7 @@ export class AppointmentEditComponent implements OnInit {
       insertRecord(form: NgForm) {
         const alunoId = form.value.alunoId; // Assuming 'alunoId' is a field in the form.
         
-        this.appointmentService.postPaymentDetail(alunoId).subscribe({
+        this.appointmentService.createEntrevista(alunoId).subscribe({
           next: res => {
             this.appointmentService.list = res as EntrevistaDTO[];
             this.appointmentService.resetForm(form);
@@ -89,7 +89,7 @@ export class AppointmentEditComponent implements OnInit {
     
         console.log(`id da entrevista não encontrado: ${form.value.id}`);
     
-        this.appointmentService.putPaymentDetail(alunoId, id)
+        this.appointmentService.updateEntrevista(alunoId, id)
           .subscribe({
             next: res => {
               this.appointmentService.list = res as EntrevistaDTO[];
@@ -109,7 +109,7 @@ export class AppointmentEditComponent implements OnInit {
     
       onDelete(id: number) {
         if (confirm('Are you sure to delete this record?'))
-          this.appointmentService.deletePaymentDetail(id)
+          this.appointmentService.deleteEntrevista(id)
             .subscribe({
               next: res => {
                 this.appointmentService.list = res as EntrevistaDTO[]

@@ -4004,11 +4004,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\InterviewScheduledApp\\DataAccessLayer\\DataAccessLayer.csproj",
+      "projectUniqueName": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\Projecto\\InterviewScheduledApp\\DataAccessLayer\\DataAccessLayer.csproj",
       "projectName": "DataAccessLayer",
-      "projectPath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\InterviewScheduledApp\\DataAccessLayer\\DataAccessLayer.csproj",
+      "projectPath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\Projecto\\InterviewScheduledApp\\DataAccessLayer\\DataAccessLayer.csproj",
       "packagesPath": "C:\\Users\\wagne\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\InterviewScheduledApp\\DataAccessLayer\\obj\\",
+      "outputPath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\Projecto\\InterviewScheduledApp\\DataAccessLayer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\wagne\\AppData\\Roaming\\NuGet\\NuGet.Config",

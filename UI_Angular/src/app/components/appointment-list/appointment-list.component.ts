@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { AppointmentService } from '../../appointment.service';
-import { Aluno } from '../../appointment.service';
+import { AppointmentService } from '../../api-crud.service';
+import { Aluno } from '../../api-crud.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { interval } from 'rxjs';
@@ -35,7 +35,7 @@ export class AppointmentListComponent implements OnInit {
   private intervalSubscription?: Subscription;
 
 
-  constructor(public appointmentService: AppointmentService, private toastr: ToastrService,  private router: Router, ) { }
+  constructor(public appointmentService: AppointmentService, public toastr: ToastrService,  private router: Router, ) { }
 
     
   onSubmit(form: NgForm) {
@@ -122,7 +122,7 @@ export class AppointmentListComponent implements OnInit {
       this.appointmentService.deleteAluno(id).subscribe({
         next: res => {
           this.appointmentService.getAllAlunos(); // Refresh the list of students
-          this.toastr.error('Deleted successfully', 'Aluno Register', );
+          this.toastr.error('Deleted successfully', 'Aluno Register' );
 
           
         },
@@ -154,7 +154,7 @@ export class AppointmentListComponent implements OnInit {
         this.appointmentService.getAllAlunos(); // Refresh the list of students
         this.appointmentService.formData_Aluno = new Aluno(); // Reset the form data
         form.resetForm();
-        this.toastr.success('Updated successfully', 'Aluno Register', { positionClass: 'toast-top-left' });
+        this.toastr.info('Updated successfully', 'Aluno Register');
       },
       error: err => {
         console.log(err);

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiService } from '../api.service'; // Certifique-se de importar o serviço
+import { ApiService } from '../api-auth.service'; // Certifique-se de importar o serviço
 
 @Component({
   selector: 'app-dash-board',

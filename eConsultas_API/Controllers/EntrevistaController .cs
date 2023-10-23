@@ -52,7 +52,7 @@ namespace eConsultas_API.Controllers
 
 
         [HttpPut]
-        public IActionResult Update(int alunoId, int id, [FromBody] EntrevistaDTO model)
+        public IActionResult Update(int alunoId, int id, [FromBody] EntrevistaDTO model)    
         {
             if (!_entrevistaRepository.AlunoExists(alunoId))
             {

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "RL4d1TI6BDQyO6TGCDVLQjXCky1PoQHLTFj6nJiWDeehaMXUEVqPeLrTvWzYdxWHAS6Ak4tZ2OAHUVeZxvTnZg==",
+  "dgSpecHash": "e7q0HrzSsUXukqOxY40zC0Eo8sJ1vespkkgt1rSdZng4cuIJ425BAMQ47rm8vNQaqC1pzhw1O0o7r9EDa4couA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\InterviewScheduledApp\\eConsultas_API\\eConsultas_API.csproj",
+  "projectFilePath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\Projecto\\InterviewScheduledApp\\eConsultas_API\\eConsultas_API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\wagne\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\wagne\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
