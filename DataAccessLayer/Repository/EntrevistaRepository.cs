@@ -54,6 +54,7 @@ namespace DataAccessLayer.Repository
             existingEntrevista.DataPrimeiroContacto = entrevista.DataPrimeiroContacto;
             existingEntrevista.DataEntrevista = entrevista.DataEntrevista;
             existingEntrevista.VagaDisponivel = entrevista.VagaDisponivel;
+            existingEntrevista.NumerodeEntrevistaFeitas = entrevista.NumerodeEntrevistaFeitas;
 
             _context.SaveChanges();
 

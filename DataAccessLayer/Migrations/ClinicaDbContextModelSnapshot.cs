@@ -34,6 +34,9 @@ namespace DataAccessLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("NumeroEntrevisPorPessoa")
+                        .HasColumnType("int");
+
                     b.Property<string>("Resultado")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -160,17 +163,18 @@ namespace DataAccessLayer.Migrations
                     b.Property<int>("AlunoId")
                         .HasColumnType("int");
 
-                    b.Property<string>("DataEntrevista")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DataEntrevista")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("DataPrimeiroContacto")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DataPrimeiroContacto")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Empresa")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("NumerodeEntrevistaFeitas")
+                        .HasColumnType("int");
 
                     b.Property<int>("VagaDisponivel")
                         .HasColumnType("int");
@@ -350,12 +354,12 @@ namespace DataAccessLayer.Migrations
                         new
                         {
                             UserId = 1,
-                            CreationDate = new DateTime(2023, 10, 22, 8, 58, 6, 200, DateTimeKind.Utc).AddTicks(9322),
-                            DateATT = new DateTime(2023, 10, 22, 8, 58, 6, 200, DateTimeKind.Utc).AddTicks(9327),
+                            CreationDate = new DateTime(2023, 10, 25, 11, 28, 47, 13, DateTimeKind.Utc).AddTicks(9257),
+                            DateATT = new DateTime(2023, 10, 25, 11, 28, 47, 13, DateTimeKind.Utc).AddTicks(9262),
                             Email = "superadmin@example.com",
                             FullName = "Super Admin",
                             IsDeleted = false,
-                            Password = "$2b$10$VgbV4feFXlHElhHtqQzzUu7CQEE4GDtW.3tFzpAhHQDywDQQAA.Ti",
+                            Password = "$2b$10$Jo8wz.vgLhEvnY2sf0KsHuglFxJOxmF/Wh4clSDjLlDvshsqd1cGm",
                             Status = 1,
                             UserType = 3
                         });

@@ -57,6 +57,7 @@ namespace eConsultas_API.Controllers
             existingAluno.Nome = model.Nome;
             existingAluno.Status = model.Status;
             existingAluno.Resultado = model.Resultado;
+            existingAluno.NumeroEntrevisPorPessoa = model.NumeroEntrevisPorPessoa;
 
             _alunoRepository.Update(existingAluno);
             return Ok(new { message = "Aluno updated" });

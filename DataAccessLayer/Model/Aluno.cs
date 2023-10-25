@@ -12,5 +12,6 @@ namespace DataAccessLayer.Model
         public string Nome { get; set; }
         public string Status { get; set; }
         public string Resultado { get; set; }
+        public int NumeroEntrevisPorPessoa { get; set; }
     }
 }

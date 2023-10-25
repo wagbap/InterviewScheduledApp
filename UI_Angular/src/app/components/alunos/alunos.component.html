@@ -1,0 +1,144 @@
+<!-- Include Header Component -->
+<app-header></app-header>
+
+<!-- Include Side Navigation Component -->
+<app-sidenav></app-sidenav>
+
+
+<main id="main" class="main">
+
+
+  <section class="section dashboard">
+    <div class="container">
+
+      <div class="pagetitle">
+        <h1>Dashboard</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ol>
+        </nav>
+      </div>
+
+
+      <div class="bg-body-secondary text-center py-5 rounded-2">
+        <h1 class="dispay-6 fw-bold">Registar Aluno</h1>
+      </div>
+      <!-- ... Outras partes do seu HTML ... -->
+
+      <div class="col-12">
+        <div class="card recent-students overflow-auto">
+          <div class="card-body">
+            <h5 class="card-title">Lista de Alunos</h5>
+            <!-- ... Outras partes do seu HTML ... -->
+            <form #form="ngForm" (submit)="onSubmit(form)" [class.submitted]="appointmentService.formSubmitted" novalidate autocomplete="off">
+              <!-- Nome do Aluno -->
+              <div class="mb-3">
+                  <label class="mb-1" >Nome do Aluno</label>
+                  <input type="text" class="form-control form-control-lg" #nome="ngModel" name="nome" [(ngModel)]="appointmentService.formData_Aluno.nome">
+              </div>
+
+
+                    <!-- Número de Entrevistas Por Pessoa -->
+                    <div class="mb-3">
+                      <label  class="mb-1" >Número de Entrevistas Por Pessoa</label>
+                      <input type="text" class="form-control form-control-lg" #numeroEntrevisPorPessoa="ngModel" name="numeroEntrevisPorPessoa" [(ngModel)]="appointmentService.formData_Aluno.numeroEntrevisPorPessoa">
+                  </div>
+          
+              <!-- Status Dropdown -->
+              <div class="mb-3">
+                  <label class="mb-1" for="status">Status:</label>
+                  <select class="form-control" id="status" [(ngModel)]="appointmentService.formData_Aluno.status" name="status">
+                      <option value="Agendado">Agendado</option>
+                      <option value="Sem entrevista">Sem entrevista</option>
+                      <option value="Todas entrevista feitas">Todas entrevista feitas</option>
+                  </select>
+              </div>
+          
+              <!-- Resultado Dropdown -->
+              <div class="mb-3">
+                  <label  class="mb-1" for="resultado">Resultado:</label>
+                  <select class="form-control" id="resultado" [(ngModel)]="appointmentService.formData_Aluno.resultado" name="resultado">
+                      <option value="Aprovado">Aprovado</option>
+                      <option value="Reprovado">Reprovado</option>
+                      <option value="Espera do feedback">Espera do feedback</option>
+                  </select>
+              </div>
+          
+        
+          
+              <!-- Button -->
+              <div class="mb-3 d-grid">
+                  <button class="btn btn-lg btn-success" type="submit">
+                      {{ appointmentService.formData_Aluno.id && appointmentService.formData_Aluno.id != 0 ? 'Atualizar' : 'Registar' }}
+                  </button>
+              </div>
+          </form>
+          
+
+            <div class="mb-3">
+              <input class="form-control form-control-lg" [(ngModel)]="searchText" placeholder="Search by student name">
+
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Datatables</h5>
+                <p>Lista de Alunos</p>
+
+                <!-- Table with stripped rows -->
+                <!-- Table with stripped rows -->
+                <table class="table datatable" id="myTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nome</th>
+                      <th scope="col">Nº de Entrevsita / Pessoa</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Resultado</th> 
+                      <th scope="col">Acção</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let aluno of appointmentService.list_aluno | filter: searchText">
+                      <th scope="row">{{ aluno.id }}</th>
+                      <td>{{ aluno.nome }}</td>
+                      <td>{{ aluno.numeroEntrevisPorPessoa }}</td>
+                      <td>{{ aluno.status }}</td>
+                      <td>{{ aluno.resultado }}</td>
+                       <td>
+                        <!-- Icone de edição -->
+                        <span class="text-secondary mr-2 m-2">
+                          <i class="fas fa-edit fa-lg mouse-hover" (click)="populateForm(aluno)"></i>
+                        </span>
+                        <!-- Icone de excluir -->
+                        <span class="text-danger">
+                          <i class="fas fa-trash fa-lg mouse-hover" (click)="onDelete(aluno.id)"></i>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- End Table with stripped rows -->
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+    <script>
+
+
+      $(document).ready(function () {
+        $('#myTable').DataTable();
+      });
+
+    </script>

@@ -1,0 +1,190 @@
+<!-- Include Header Component -->
+<app-header></app-header>
+
+<!-- Include Side Navigation Component -->
+<app-sidenav></app-sidenav>
+
+
+<br><br><br>
+
+<main id="main" class="main">
+
+
+  <section class="section dashboard">
+    <div class="container">
+
+      <div class="pagetitle">
+
+        <h1>Dashboard</h1>
+        <nav>
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ol>
+        </nav>
+      </div>
+
+      <div class="bg-body-secondary text-center py-5 rounded-2">
+        <h1 class="dispay-6 fw-bold">Agendar uma Entrevista</h1>
+      </div>
+      <!-- ... Outras partes do seu HTML ... -->
+
+      <div class="col-12">
+        <div class="card recent-students overflow-auto">
+          <div class="card-body">
+            <h5 class="card-title">Lista de Alunos</h5>
+
+            <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+                class="bi bi-arrow-up-short"></i></a>
+            <p>appointment-edit works!</p>
+            <form #form="ngForm" (submit)="onSubmit(form)" [class.submitted]="appointmentService.formSubmitted"
+              novalidate autocomplete="off">
+
+              <input type="hidden" name="id" [(ngModel)]="appointmentService.formData.id">
+             
+              <div class="row">
+              <!-- Create Mode: Display Dropdown -->
+              <div class="mb-3 col-3" *ngIf="!appointmentService.formData.id || appointmentService.formData.id === 0">
+                <label>Nome do Aluno</label>
+                <select class="form-control form-control-lg" name="alunoId"
+                  [(ngModel)]="appointmentService.formData.alunoId">
+                  <option value="" disabled>Escolha o aluno</option>
+                  <option *ngFor="let student of appointmentService.students" [value]="student.id">{{student.nome}}
+                  </option>
+                </select>
+                <input type="hidden" name="alunoId" [(ngModel)]="appointmentService.formData.alunoId">
+              </div>
+
+
+
+
+
+                <!-- Update Mode: Display Disabled Text Input -->
+                <div class="mb-3 col-3" *ngIf="appointmentService.formData.id && appointmentService.formData.id !== 0">
+                  <label>Nome do Aluno</label>
+                  <input type="text" class="form-control form-control-lg"
+                    [value]="getStudentNameById(appointmentService.formData.alunoId)" disabled>
+                  <input type="hidden" name="alunoId" [(ngModel)]="appointmentService.formData.alunoId">
+                </div>
+
+
+    
+                <div class="mb-3 col-9">
+
+                  <label>Numero de Entrevistas Feitas</label>
+                  <input type="text"  class="form-control form-control-lg" name="NumerodeEntrevistaFeitas"
+                    [(ngModel)]="appointmentService.formData.NumerodeEntrevistaFeitas">
+                </div>
+
+              </div>
+
+              <div class="row">
+
+                <div class="mb-3 col-3">
+                  <label>Data do Primeiro Contato</label>
+                  <input type="datetime-local" class="form-control form-control-lg" 
+                         #dataPrimeiroContacto="ngModel"
+                         name="dataPrimeiroContacto" 
+                         [(ngModel)]="appointmentService.formData.dataPrimeiroContacto" required>
+              </div>
+              
+              <div class="mb-3 col-3">
+                  <label>Data da Entrevista</label>
+                  <input type="datetime-local" class="form-control form-control-lg" 
+                         #dataEntrevista="ngModel"
+                         name="dataEntrevista" 
+                         [(ngModel)]="appointmentService.formData.dataEntrevista" required>
+              </div>
+              
+
+                <div class="mb-3  col-3">
+                  <label>Empresa</label>
+                  <input class="form-control form-control-lg" #empresa="ngModel" name="empresa"
+                    [(ngModel)]="appointmentService.formData.empresa" required>
+                </div>
+
+
+                <div class="mb-3 col-3">
+                  <label>Vaga Disponível</label>
+                  <input type="number" class="form-control form-control-lg" #vagaDisponivel="ngModel"
+                    name="vagaDisponivel" [(ngModel)]="appointmentService.formData.vagaDisponivel" required>
+                </div>
+
+              </div>
+
+              <div class="row">
+
+
+
+
+              </div>
+
+
+              <div class="d-grid">
+                <button class="btn btn-lg btn-success" type="submit">
+                  {{ appointmentService.formData.id && appointmentService.formData.id != 0 ? 'Atualizar' : 'Registar' }}
+                </button>
+              </div>
+
+            </form>
+
+
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Datatables</h5>
+                <p>Lista de Entrevistas</p>
+
+                <!-- Table with stripped rows -->
+                <!-- Table with stripped rows -->
+                <table class="table datatable" id="myTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nome</th>
+                      <th scope="col">Empresa</th>
+                      <th scope="col">Data 1º Contacto</th>
+                      <th scope="col">Data Entrevista</th> 
+                      <th scope="col">Vaga Disponível</th> 
+                      <th scope="col">Acção</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let entrevista of appointmentService.list">
+                      <th scope="row">{{ entrevista.id }}</th>
+
+                     <td><ng-container *ngFor="let student of appointmentService.students">
+                      <div *ngIf="student.id == entrevista.alunoId" class="fw-bold" style="color:blueviolet;">{{student.nome}}
+                      </div>
+                    </ng-container>
+                    </td> 
+                      
+                      <td>{{ entrevista.empresa }}</td>
+                      <td>{{ entrevista.dataPrimeiroContacto }}</td>
+                      <td>{{ entrevista.dataEntrevista }}</td>
+                      <td>{{ entrevista.vagaDisponivel }}</td>
+
+                 
+                       <td>
+                        <!-- Icone de edição -->
+                        <span class="text-secondary mr-2 m-2">
+                          <i class="fas fa-edit fa-lg mouse-hover" (click)="populateForm(entrevista)"></i>
+                        </span>
+                        <!-- Icone de excluir -->
+                        <span class="text-danger">
+                          <i class="fas fa-trash fa-lg mouse-hover" (click)="onDelete(entrevista.id)"></i>
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <!-- End Table with stripped rows -->
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>

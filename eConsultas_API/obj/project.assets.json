@@ -4826,19 +4826,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\wagne\\.nuget\\packages\\": {}
+    "C:\\Users\\wagne\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\Projecto\\InterviewScheduledApp\\eConsultas_API\\eConsultas_API.csproj",
+      "projectUniqueName": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\InterviewScheduledApp\\eConsultas_API\\eConsultas_API.csproj",
       "projectName": "eConsultas_API",
-      "projectPath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\Projecto\\InterviewScheduledApp\\eConsultas_API\\eConsultas_API.csproj",
+      "projectPath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\InterviewScheduledApp\\eConsultas_API\\eConsultas_API.csproj",
       "packagesPath": "C:\\Users\\wagne\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\Projecto\\InterviewScheduledApp\\eConsultas_API\\obj\\",
+      "outputPath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\InterviewScheduledApp\\eConsultas_API\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
         "C:\\Users\\wagne\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4846,14 +4851,15 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\Projecto\\InterviewScheduledApp\\DataAccessLayer\\DataAccessLayer.csproj": {
-              "projectPath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\Projecto\\InterviewScheduledApp\\DataAccessLayer\\DataAccessLayer.csproj"
+            "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\InterviewScheduledApp\\DataAccessLayer\\DataAccessLayer.csproj": {
+              "projectPath": "C:\\Users\\wagne\\OneDrive\\Ambiente de Trabalho\\InterviewScheduledApp\\DataAccessLayer\\DataAccessLayer.csproj"
             }
           }
         }
@@ -4930,7 +4936,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   }

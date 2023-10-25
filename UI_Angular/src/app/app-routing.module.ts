@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { LandPageComponent } from './land-page/land-page.component';
-import { DashBoardComponent } from './dash-board/dash-board.component';
-import { DashLandComponent } from './dash-land/dash-land.component';
-import { AppointmentListComponent } from './components/appointment-list/appointment-list.component';
-import { AppointmentEditComponent } from './components/appointment-edit/appointment-edit.component';
+import { LandPageComponent } from '../pages/landpage/land-page.component';
+import { DashBoardComponent } from '../pages/dashboard/dash-board.component';
+import { DashLandComponent } from '../pages/dashland/dash-land.component';
+import { EntrevistasComponent } from './components/entrevistas/entrevistas.component';
+import { AlunosComponent } from './components/alunos/alunos.component';
 
 
 const routes: Routes = [
     { path: '', component: LandPageComponent },
     { path: 'dashland', component: DashLandComponent },
     { path: 'login', component: DashBoardComponent },
-    { path: 'registarEntrevista', component: AppointmentEditComponent },
-    { path: 'registarAluno', component: AppointmentListComponent },
-    { path: 'login', loadChildren: () => import('./dash-board/dash-board.module').then(m => m.DashboardModule) },
+    { path: 'registarEntrevista', component: EntrevistasComponent },
+    { path: 'registarAluno', component: AlunosComponent },
+    { path: 'login', loadChildren: () => import('../pages/dashboard/dash-board.module').then(m => m.DashboardModule) },
 ];
 
 @NgModule({
