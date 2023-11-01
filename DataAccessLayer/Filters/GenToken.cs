@@ -63,7 +63,6 @@ namespace DataAccessLayer.Filters
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.UniqueName, user.Email),
             new Claim("UserId", user.UserId.ToString()),
-            new Claim("FullName", user.FullName),
             new Claim("UserType", user.UserType.ToString())
         };
 

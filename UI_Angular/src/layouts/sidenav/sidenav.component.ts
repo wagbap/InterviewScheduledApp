@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { AppointmentService } from 'src/app/services/api-crud.service';
+import { BehaviorSubject } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-sidenav',
@@ -7,9 +10,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SidenavComponent implements OnInit {
 
-  constructor() { }
+  selectedDUserId: string =''; 
+  loggedUserId:  string =''; 
+
+  constructor(private appointmentService: AppointmentService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    const loggedUserId = this.appointmentService.getLoggedUserType();
+
+    if (loggedUserId !== '') {
+      this.selectedDUserId = loggedUserId;
+      console.log('logged UserType ID.'+this.selectedDUserId);
+      
+    } else {
+      console.error('Unable to retrieve logged user ID.');
+    }
   }
 
-}
+  }
+

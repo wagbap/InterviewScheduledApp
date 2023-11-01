@@ -41,38 +41,11 @@ namespace DataAccessLayer.Repository
         }
 
 
-        /* Doctor Sections */
-        public List<DoctorModel> GetDoctorBy(string? region = null, string? city = null, string? Specialization = null)
+        public T AddUser<T>(T user) where T : UserModel
         {
-            var query = _context.Users.OfType<DoctorModel>().Where(u => !u.IsDeleted);
-
-            if (!string.IsNullOrEmpty(region))
-            {
-                query = query.Where(u => u.Region == region);
-            }
-
-            if (!string.IsNullOrEmpty(city))
-            {
-                query = query.Where(u => u.City == city);
-            }
-
-            if (!string.IsNullOrEmpty(Specialization))
-            {
-                query = query.Where(u => u.Especialization == Specialization);
-            }
-
-            var doctors = query.ToList();
-            return doctors;
-        }
-
-        /*Metodos Genericos Users*/
-        // add user
-        public T AddUserGen<T>(T user) where T : UserModel
-        {
-            // Verifique se já existe um usuário com o mesmo email
+            // Check if a user with the same email already exists
             if (_context.Users.Any(u => u.Email == user.Email))
             {
-                // Email duplicado, retorne uma resposta de erro
                 throw new ArgumentException("Email already exists.");
             }
 
@@ -84,8 +57,8 @@ namespace DataAccessLayer.Repository
             return user;
         }
 
-        // delete user
-        public bool DeleteUserGen<T>(int id) where T : UserModel
+        // Delete user
+        public bool DeleteUser<T>(int id) where T : UserModel
         {
             var user = _context.Users.OfType<T>().FirstOrDefault(x => x.UserId == id);
             if (user != null)
@@ -97,70 +70,35 @@ namespace DataAccessLayer.Repository
             return false;
         }
 
-        // soft delete user
-        public bool SoftDeleteUserGen<T>(int id) where T : UserModel
+        // Get all users
+        public List<T> GetAllUsers<T>() where T : UserModel
         {
-            var user = _context.Users.OfType<T>().FirstOrDefault(x => x.UserId == id);
-            if (user != null)
-            {
-                user.IsDeleted = true;
-                user.Status = 0;
-                _context.SaveChanges();
-                return true;
-            }
-            return false;
+            return _context.Users.OfType<T>().ToList();
         }
 
-        // restore soft-deleted user
-        public bool RestoreDeletedUserGen<T>(int id) where T : UserModel
+        // Get user by ID
+        public T GetUserById<T>(int id) where T : UserModel
         {
-            var user = _context.Users.OfType<T>().FirstOrDefault(x => x.UserId == id && x.IsDeleted);
-            if (user != null)
-            {
-                user.IsDeleted = false;
-                _context.SaveChanges();
-                return true;
-            }
-            return false;
+            return _context.Users.OfType<T>().FirstOrDefault(x => x.UserId == id);
         }
 
-        // get all users (excluding soft-deleted ones)
-        public List<T> GetAllUsersGen<T>() where T : UserModel
+        // Get user by email
+        public T GetUserByEmail<T>(string email) where T : UserModel
         {
-            var users = _context.Users.OfType<T>().Where(u => !u.IsDeleted).ToList();
-            return users;
-        }
-
-        // get all soft-deleted users
-        public List<T> GetAllDeletedUsersGen<T>() where T : UserModel
-        {
-            var users = _context.Users.OfType<T>().Where(u => u.IsDeleted).ToList();
-            return users;
-        }
-
-        // get user by id (excluding soft-deleted ones)
-        public T GetUserByIdGen<T>(int id) where T : UserModel
-        {
-            var user = _context.Users.OfType<T>().FirstOrDefault(x => x.UserId == id && !x.IsDeleted);
-            return user;
-        }
-
-        // get doctor by email (excluding soft-deleted ones)
-        public T GetUserByEmailGen<T>(string email) where T : UserModel
-        {
-            var user = _context.Users.OfType<T>().FirstOrDefault(x => x.Email.ToLower() == email.ToLower() && !x.IsDeleted);
-            return user;
+            return _context.Users.OfType<T>().FirstOrDefault(x => x.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
         }
 
         // Update user
-        public T UpdateUserGen<T>(T user) where T : UserModel
+        public T UpdateUser<T>(T user) where T : UserModel
         {
-            var existingUser = GetUserByIdGen<T>(user.UserId);
+            var existingUser = GetUserById<T>(user.UserId);
+
             if (existingUser == null)
             {
                 throw new ArgumentException($"User with ID {user.UserId} not found.");
             }
 
+            // Using reflection to copy matching property values (be aware this might not be the most efficient way)
             foreach (var property in typeof(T).GetProperties())
             {
                 if (property.Name != "UserId" && property.CanWrite && property.Name != "Password")
@@ -174,131 +112,6 @@ namespace DataAccessLayer.Repository
             _context.SaveChanges();
 
             return existingUser;
-        }
-
-
-
-
-        public void UpdateDeathStatus(int userId, bool deathStatus)
-        {
-            var user = _context.RegionDiseaseStatistics.FirstOrDefault(u => u.UserId == userId);
-            if (user == null)
-            {
-                throw new ArgumentException($"No user found with ID {userId}.");
-            }
-
-            user.DeathStatus = deathStatus;
-            _context.SaveChanges();
-        }
-
-
-        // Get all Image url by userId and return image path
-        public List<FileUser> GetImage()
-        {
-            var userImg = _context.ImgUser.ToList();
-            return userImg;
-        }
-
-        
-        public bool IsFileCopy(FileUser image, int userId, int? appoint = null)
-        {
-            if (image != null)
-            {
-                var imageUser = new FileUser
-                {
-                    ImageUrl = image.ImageUrl,
-                    UserId = userId
-                };
-                _context.ImgUser.Add(imageUser);
-                _context.SaveChanges();
-
-                if (appoint != null)
-                {
-                    var pdfFile = _context.Appointments.FirstOrDefault(x => x.AppointId == appoint);
-                    pdfFile.PDFFile = imageUser.ImgId.ToString();
-                    _context.Appointments.Update(pdfFile);
-                    _context.SaveChanges();
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-        public bool RegisterRegionDiseaseStatistic(int userPatientId, int diseaseId, string region)
-        {
-            
-            if (userPatientId <= 0)
-                throw new ArgumentException("Invalid user ID.");
-
-            if (diseaseId <= 0)
-                throw new ArgumentException("Invalid disease ID.");
-
-            if (string.IsNullOrWhiteSpace(region))
-                throw new ArgumentException("Region cannot be null or empty.");
-
-            
-            var userExists = _context.Users.Any(u => u.UserId == userPatientId);
-            if (!userExists)
-                throw new ArgumentException("User with the given ID does not exist.");
-
-            
-            var diseaseExists = _context.Diseases.Any(d => d.Id == diseaseId);
-            if (!diseaseExists)
-                throw new ArgumentException("Disease with the given ID does not exist.");
-
-            
-            var regionDiseaseStatistic = new RegionDiseaseStatistic
-            {
-                UserId = userPatientId,
-                DiseaseId = diseaseId,
-                Region = region,
-                DeathStatus = false 
-            };
-
-           
-            _context.RegionDiseaseStatistics.Add(regionDiseaseStatistic);
-            _context.SaveChanges();
-
-            return true;
-        }
-
-
-        public List<DiseaseWithStatisticsVM> GetAllDiseasesWithStatistics()
-        {
-            var data = _context.RegionDiseaseStatistics
-                .Join(
-                    _context.Diseases,
-                    rds => rds.DiseaseId,
-                    disease => disease.Id,
-                    (rds, disease) => new { RegionDiseaseStat = rds, Disease = disease }
-                )
-                .Join(
-                    _context.Users,
-                    rdsWithDisease => rdsWithDisease.RegionDiseaseStat.UserId,
-                    user => user.UserId,
-                    (rdsWithDisease, user) => new { rdsWithDisease.RegionDiseaseStat, rdsWithDisease.Disease, User = user }
-                )
-                .Select(joined => new DiseaseWithStatisticsVM
-                {
-                    DiseaseId = joined.Disease.Id,
-                    UserId = joined.RegionDiseaseStat.UserId,
-                    Id = joined.RegionDiseaseStat.Id,
-                    DiseaseName = joined.Disease.Name,
-                    Region = joined.RegionDiseaseStat.Region,
-                    DeathStatus = joined.RegionDiseaseStat.DeathStatus,
-                    FullName = joined.User.FullName 
-                })
-                .ToList();
-
-            return data;
-        }
-
-
-
-        public List<Disease> GetAllDiseases()
-        {
-            return _context.Diseases.ToList();
         }
     }
 }

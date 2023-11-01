@@ -75,16 +75,14 @@ namespace DataAccessLayer.Filters
                 var principal = tokenHandler.ReadToken(token) as JwtSecurityToken;
 
                 var userIdClaim = principal.Claims.FirstOrDefault(claim => claim.Type == "UserId");
-                var fullNameClaim = principal.Claims.FirstOrDefault(claim => claim.Type == "FullName");
                 var emailClaim = principal.Claims.FirstOrDefault(claim => claim.Type == JwtRegisteredClaimNames.UniqueName);
                 var userTypeClaim = principal.Claims.FirstOrDefault(claim => claim.Type == "UserType");
 
-                if (userIdClaim != null && fullNameClaim != null && emailClaim != null && userTypeClaim != null)
+                if (userIdClaim != null  && emailClaim != null && userTypeClaim != null)
                 {
                     return new LoggedModel
                     {
                         UserId = int.Parse(userIdClaim.Value),
-                        FullName = fullNameClaim.Value,
                         Email = emailClaim.Value,
                         UserType = userTypeClaim.Value,
                         TokenKey = token

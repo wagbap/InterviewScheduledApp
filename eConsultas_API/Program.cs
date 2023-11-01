@@ -30,9 +30,7 @@ builder.Services.AddDbContext<ClinicaDbContext>();
 builder.Services.AddScoped<IUserInterface, UserRepository>();
 builder.Services.AddScoped<IGenTokenFilter, GenTokenFilter>();
 builder.Services.AddScoped<IDecToken, DecToken>();
-builder.Services.AddScoped<IAppointInterface, AppointRepository>();
 builder.Services.AddScoped<ILoginInterface, LoginRepository>();
-builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
 builder.Services.AddScoped<IEntrevistaRepository, EntrevistaRepository>();
 
@@ -45,8 +43,6 @@ var config = new MapperConfiguration(cfg => {
 });
 
 IMapper mapper = config.CreateMapper();
-
-
 
 //Testar o endereço IP do localhost que se no caso fosse um projecto real pegariamos o endereço IP remoto
 builder.Services.Configure<ForwardedHeadersOptions>(options =>
@@ -74,8 +70,6 @@ builder.Services.AddCors(options => options.AddPolicy(name: "SuperHeroOrigins",
     {
         policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
     }));
-
-
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

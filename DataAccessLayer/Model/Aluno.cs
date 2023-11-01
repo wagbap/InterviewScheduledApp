@@ -10,8 +10,9 @@ namespace DataAccessLayer.Model
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } // Consider renaming to avoid confusion with UserModel's Status
         public string Resultado { get; set; }
         public int NumeroEntrevisPorPessoa { get; set; }
+
     }
 }

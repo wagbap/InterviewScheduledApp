@@ -28,8 +28,7 @@ namespace DataAccessLayer.Repository
         public bool AlunoExists(int alunoId)
         {
             return _context.Alunos.Any(a => a.Id == alunoId);
-        }
-
+        }     
         public Entrevista Add(Entrevista entrevista, int alunoId)
         {
             entrevista.AlunoId = alunoId; // Associando o Entrevista ao AlunoId fornecido
@@ -37,8 +36,6 @@ namespace DataAccessLayer.Repository
             _context.SaveChanges();
             return entrevista;
         }
-
-
         public Entrevista Update(Entrevista entrevista, int alunoId)
         {
             var existingEntrevista = _context.Entrevistas.Find(entrevista.Id);

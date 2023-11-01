@@ -31,19 +31,19 @@ export class AlunosComponent implements OnInit {
   private intervalSubscription?: Subscription;
   searchText: string = '';
 
-  constructor(public appointmentService: AppointmentService, public toastr: ToastrService,  public router: Router ) { }
+  constructor(public appointmentService: AppointmentService, public toastr: ToastrService, public router: Router) { }
 
-    
+
   onSubmit(form: NgForm) {
     if (form.valid) {
-        if (!this.appointmentService.formData_Aluno.id || this.appointmentService.formData_Aluno.id == 0) {
-            this.createAluno(form);
-        } else {
-            this.updateAluno(form);
-        }
+      if (!this.appointmentService.formData_Aluno.id || this.appointmentService.formData_Aluno.id == 0) {
+        this.createAluno(form);
+      } else {
+        this.updateAluno(form);
+      }
     }
   }
-      
+
   ngOnInit(): void {
     this.checkToken();
     this.appointmentService.fetchStudents();
@@ -52,13 +52,13 @@ export class AlunosComponent implements OnInit {
   }
 
   user = {
-    fullName:""
+    fullName: ""
   };
-  
+
 
   startPolling(): void {
     this.intervalSubscription = interval(500).subscribe(() => {
-  
+
       console.log('Current alunoId:', this.appointmentService.formData.alunoId);
     });
   }
@@ -68,23 +68,23 @@ export class AlunosComponent implements OnInit {
       this.intervalSubscription.unsubscribe();
     }
   }
-    
-    
-    getStudentName(alunoId?: number): string {
-      if (!alunoId) return ''; // If alunoId is not provided, return an empty string
-    
-      const student = this.appointmentService.students.find(s => s.id === alunoId);
-      return student ? student.nome : '';
+
+
+  getStudentName(alunoId?: number): string {
+    if (!alunoId) return ''; // If alunoId is not provided, return an empty string
+
+    const student = this.appointmentService.students.find(s => s.id === alunoId);
+    return student ? student.nome : '';
+  }
+
+  getStudentNameById(alunoId?: number): string {
+    if (!alunoId) {
+      return 'N/A';
     }
-    
-    getStudentNameById(alunoId?: number): string {
-      if (!alunoId) {
-        return 'N/A';
-      }
-      const student = this.appointmentService.students.find(s => s.id === alunoId);
-      return student ? student.nome : 'N/A';
-    }
-    
+    const student = this.appointmentService.students.find(s => s.id === alunoId);
+    return student ? student.nome : 'N/A';
+  }
+
 
   checkToken(): void {
     const token = localStorage.getItem('token');
@@ -117,9 +117,9 @@ export class AlunosComponent implements OnInit {
       this.appointmentService.deleteAluno(id).subscribe({
         next: res => {
           this.appointmentService.getAllAlunos(); // Refresh the list of students
-          this.toastr.error('Deleted successfully', 'Aluno Register' );
+          this.toastr.error('Deleted successfully', 'Aluno Register');
 
-          
+
         },
         error: err => {
           console.log(err);
@@ -127,6 +127,8 @@ export class AlunosComponent implements OnInit {
       });
     }
   }
+
+
   createAluno(form: NgForm) {
     this.appointmentService.createAluno(this.appointmentService.formData_Aluno).subscribe({
       next: res => {
@@ -136,8 +138,14 @@ export class AlunosComponent implements OnInit {
         this.toastr.success('Created successfully', 'Aluno Register');
       },
       error: err => {
-        console.log(err);
+        console.log(err); // Registre o erro no console para diagnóstico
+        if (err.error && err.error.message) {
+          this.toastr.error(err.error.message, 'Error');
+        } else {
+          this.toastr.error('An error occurred', 'Error');
+        }
       }
+
     });
   }
 

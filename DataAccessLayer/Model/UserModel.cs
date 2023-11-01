@@ -14,8 +14,6 @@ namespace DataAccessLayer.Model
     {
         [Key]
         public int UserId { get; set; }
-        public string FullName { get; set; }
-        public string? PhoneNumber { get; set; }
 
         [EmailAddress]
         [DataType(DataType.EmailAddress)]
@@ -28,13 +26,11 @@ namespace DataAccessLayer.Model
         public int Status { get; set; }
         public DateTime? CreationDate { get; set; }
         public DateTime? DateATT { get; set; }
-        public bool IsDeleted { get; set; } = false;
-
-   
+         
         public bool PasswordIsValid(string password)
         {
             return BCrypt.Net.BCrypt.Verify(password, Password);
-        }   
+        }
 
         public void SetPasswordHash()
         {

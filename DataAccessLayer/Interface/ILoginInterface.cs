@@ -10,8 +10,5 @@ namespace DataAccessLayer.Interface
     public interface ILoginInterface
     {
         string logIn(LoginModel login);
-        Task<bool> ForgotPwd<T>(ForgotPwdModel forgotPwd) where T : UserModel;
-        T ChangePwd<T>(ChangePwdModel changePwd) where T : UserModel;
-
     }
 }

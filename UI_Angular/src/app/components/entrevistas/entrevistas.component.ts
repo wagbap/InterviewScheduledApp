@@ -7,6 +7,8 @@ import { EntrevistaDTO } from '../../services/api-crud.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { interval } from 'rxjs';
+import { Doctor } from 'src/model/doctor.model';
+
 
 @Component({
   selector: 'app-entrevistas',
@@ -16,26 +18,34 @@ import { interval } from 'rxjs';
 export class EntrevistasComponent implements OnInit {
     doctor: UserModel = new UserModel();
     private intervalSubscription?: Subscription;
+    errorMessage: string = '';
+    selectedDoctorUserId: number | null = null;
+    doctors: Doctor[] = [];
+    selectedDoctorFullName: string = '';
 
     constructor(public appointmentService: AppointmentService, public toastr: ToastrService,  private router: Router) { }
 
     onSubmit(form: NgForm) {
-        this.appointmentService.formSubmitted = true;
-        if (form.valid) {
-            if (!this.appointmentService.formData.id || this.appointmentService.formData.id == 0) {
-                this.insertRecord(form);
-            } else {
-                this.updateRecord(form);
-            }
-        }
-    }
-    
+      this.appointmentService.formSubmitted = true;
+      this.errorMessage = ''; // Reset the error message at the beginning of submission
+      if (form.valid) {
+          if (!this.appointmentService.formData.id || this.appointmentService.formData.id == 0) {
+              this.insertRecord(form);
+          } else {
+              this.updateRecord(form);
+          }
+      }
+  }
+  
  ngOnInit(): void {
     this.checkToken();
     this.appointmentService.fetchStudents();
     this.appointmentService.refreshListEntrevista();
     this.startPolling();
   }
+
+  
+
 
   startPolling(): void {
     this.intervalSubscription = interval(500).subscribe(() => {
@@ -65,24 +75,30 @@ export class EntrevistasComponent implements OnInit {
       return student ? student.nome : 'N/A';
     }
     
-    
-    
-    
-      insertRecord(form: NgForm) {
-        const alunoId = form.value.alunoId; // Assuming 'alunoId' is a field in the form.
-        
-        this.appointmentService.createEntrevista(alunoId).subscribe({
-          next: res => {
-            this.appointmentService.list = res as EntrevistaDTO[];
-            this.appointmentService.resetForm(form);
-            this.toastr.success('Inserted successfully', 'Payment Detail Register');
+    insertRecord(form: NgForm) {
+      const alunoId = form.value.alunoId; // Assuming 'alunoId' is a field in the form.
+      this.appointmentService.createEntrevista(form.value, alunoId).subscribe(
+          (response) => {
+              if (response && response.error) {
+                  // Check specific error message or just show the error returned
+                  this.toastr.error(response.error, 'Error');
+              } else {
+                  this.toastr.success('Inserted successfully', 'Entrevista Registration');
+              }
           },
-          error: err => {
-            console.log(err);
+          (error) => {
+              if (error && error.error && error.error.message) {
+                  this.errorMessage = error.error.message;
+              } else {
+                this.errorMessage = 'Não tem permissões para agendar entrevistas em nome de outro aluno.';
+
+              }
+             
           }
-        });
-      }
-      
+      );
+  }
+  
+       
       updateRecord(form: NgForm) {
         const alunoId = form.value.alunoId; 
         const id = form.value.id;
@@ -104,7 +120,7 @@ export class EntrevistasComponent implements OnInit {
 
 
     populateForm(selectedRecord: EntrevistaDTO) {
-        this.appointmentService.formData = Object.assign({}, selectedRecord);
+      this.appointmentService.formData = JSON.parse(JSON.stringify(selectedRecord));
       }
     
       onDelete(id: number) {

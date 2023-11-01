@@ -66,8 +66,6 @@ namespace DataAccessLayer.Filters
                 Console.WriteLine(ex);
                 return false;
             }
-
-
         }
 
         /* get validation parameters */

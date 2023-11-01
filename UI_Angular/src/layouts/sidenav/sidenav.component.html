@@ -11,17 +11,19 @@
       </a>
     </li><!-- End Dashboard Nav -->
 
-    <li class="nav-item">
+
+      <li class="nav-item" *ngIf="selectedDUserId === 'SuperAdmim'">
       <a class="nav-link collapsed" [routerLink]="['/registarAluno']">
         <i class="bi bi-menu-button-wide"></i><span>Alunos</span>
       </a>
     </li><!-- End Alunos Nav -->
     
-    <li class="nav-item">
+    <li class="nav-item" *ngIf="selectedDUserId === 'Aluno'">
       <a class="nav-link collapsed" [routerLink]="['/registarEntrevista']">
         <i class="bi bi-menu-button-wide"></i><span>Entrevistas</span>
       </a>
     </li><!-- End Entrevistas Nav -->
+    
   </ul>
 
 </aside><!-- End Sidebar-->

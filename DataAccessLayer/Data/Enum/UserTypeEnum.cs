@@ -8,9 +8,7 @@ namespace DataAccessLayer.Data.Enum
 {
     public enum UserTypeEnum
     {
-        Admin = 0,
-        Doctor = 1,
-        Patient = 2,
+        Aluno = 1,
         SuperAdmim=3
     }
 }

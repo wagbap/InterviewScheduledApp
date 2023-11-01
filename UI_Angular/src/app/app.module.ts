@@ -24,9 +24,7 @@ import { SidenavComponent } from '../layouts/sidenav/sidenav.component';
 import { FooterComponent } from '../layouts/footer/footer.component';
 
 import { FilterPipe } from './services/filter.pipe'; // ajuste o caminho conforme necessário
-
-
-
+import { AppointmentService } from './services/api-crud.service';
 
 @NgModule({
   declarations: [
@@ -50,6 +48,9 @@ import { FilterPipe } from './services/filter.pipe'; // ajuste o caminho conform
     ReactiveFormsModule , // <-- Adição aqui
     ToastrModule.forRoot({})
     
+  ],
+  providers: [
+    AppointmentService
   ],
   bootstrap: [AppComponent]
 })

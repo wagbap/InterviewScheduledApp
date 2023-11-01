@@ -8,7 +8,6 @@ namespace DataAccessLayer.Model
 {
     public class Entrevista
     {
-
         public int Id { get; set; }
         public string Empresa { get; set; }
         public DateTime DataPrimeiroContacto { get; set; }

@@ -1,18 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpErrorResponse } from '@angular/common/http';
 import { Doctor } from '../../model/doctor.model';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { NgForm } from "@angular/forms";
+import { Router } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt'; // Importando o JwtHelperService
 
+export class Users {
+  userId: number;
+  userType: string;
+  email: string;
+ 
+  constructor(userId: number, userType: string, email: string) {
+    this.userId = userId;
+    this.userType = userType;
+    this.email = email;
+  }
+}
 
 export class EntrevistaDTO {
   id: number = 0;
   empresa: string = "";
   dataPrimeiroContacto: Date = new Date();
   dataEntrevista: Date = new Date();
-  NumerodeEntrevistaFeitas:number=0;
+  numerodeEntrevistaFeitas:number=0;
   vagaDisponivel: number = 0;
   alunoId: number = 0;  
 }
@@ -28,6 +41,12 @@ export class Aluno {
   entrevistas?: Entrevista[];
 }
 
+interface ApiResponse<T> {
+  data?: T;
+  error?: string;
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -36,9 +55,9 @@ export class AppointmentService {
   //private apiUrl_Users = 'http://localhost:5242/Users';
   private apiUrl_Aluno = 'http://localhost:5242/api/Aluno';
   private apiUrl_Entrevista = 'http://localhost:5242/api/Entrevista';
+  private apiUrl_User = 'http://localhost:5242/Users/GetAllUsers';
 
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
 
   list: EntrevistaDTO[] = [];
@@ -55,8 +74,7 @@ export class AppointmentService {
       'Authorization': `Bearer ${token}`
     });
   }
-
-
+  
   //Verbos e Métodos para Alunos 
   getAllAlunos() {
     return this.http.get<Aluno[]>(this.apiUrl_Aluno).pipe(
@@ -65,7 +83,6 @@ export class AppointmentService {
       })
     );
   }
-
 
   fetchStudents() {
     this.http.get<Aluno[]>(this.apiUrl_Aluno)
@@ -85,7 +102,7 @@ export class AppointmentService {
   }
 
   createAluno(aluno: Aluno) {
-    return this.http.post<Aluno>(this.apiUrl_Aluno, aluno)
+    return this.http.post<Aluno>(this.apiUrl_Aluno, aluno,  { headers: this.getHeaders() })
       .pipe(
         tap(() => this.refreshListAluno()) // Refresh list after creating a aluno
       );
@@ -107,12 +124,12 @@ export class AppointmentService {
 
 
   //Verbos e Métodos para Entrevista 
-  getAllEntrevistas(): Observable<Entrevista[]> {
-    return this.http.get<Entrevista[]>(`${this.apiUrl_Entrevista}`, { headers: this.getHeaders() })
-      .pipe(
-        tap(data => console.log('All Entrevistas:', data)),
-        catchError(this.handleError)
-      );
+  getAllEntrevistas() {
+    return this.http.get<EntrevistaDTO[]>(this.apiUrl_Entrevista).pipe(
+      tap((entrevistas: EntrevistaDTO[]) => {
+        this.list = entrevistas;
+      })
+    );
   }
 
   getEntrevistaById(id: number): Observable<Entrevista> {
@@ -123,31 +140,36 @@ export class AppointmentService {
       );
   }
 
-  createEntrevista(alunoId: number) {
+  createEntrevista(entrevista: any, alunoId: number) {
     const fullUrl = `${this.apiUrl_Entrevista}?alunoId=${alunoId}`;
-    return this.http.post(fullUrl, this.formData).pipe(
-      tap(() => this.refreshListEntrevista())
-    );
-  }
+    return this.http.post<ApiResponse<Entrevista>>(fullUrl, entrevista, { headers: this.getHeaders() })
+        .pipe(
+            tap(() => this.refreshListEntrevista()),
+            catchError(this.handleError)
+        );
+}
+
+signOut(){
+  localStorage.clear();
+  this.router.navigate(['login'])
+}
 
   updateEntrevista(alunoId: number, id: number) {
     if (!id && this.formData.id) {
       id = this.formData.id;
     }
     const fullUrl = `${this.apiUrl_Entrevista}?alunoId=${alunoId}&id=${id}`;
-    return this.http.put(fullUrl, this.formData).pipe(
+    return this.http.put(fullUrl, this.formData, { headers: this.getHeaders() }).pipe(
       tap(() => this.refreshListEntrevista())
     );
   }
 
   deleteEntrevista(id: number) {
-    return this.http.delete(this.apiUrl_Entrevista + '/' + id).pipe(
+    return this.http.delete(this.apiUrl_Entrevista + '/' + id, { headers: this.getHeaders() }).pipe(
       tap(() => this.refreshListEntrevista())
     );
   }
-
   
-
   // Outras Configurações da pagína
   finishAppointment(appointmentId: number): Observable<any> {
     const params = new HttpParams()
@@ -181,11 +203,44 @@ export class AppointmentService {
       });
   }
 
-  private handleError(error: any) {
-    // Aqui você pode adicionar qualquer lógica extra para tratamento de erro.
-    return throwError(error.message || 'Server Error');
-  }
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage: string;
 
+    if (error.error instanceof ErrorEvent) {
+        // Erros do lado do cliente ou de rede.
+        errorMessage = 'Ocorreu um erro: ' + error.error.message;
+    } else {
+        // O backend retornou um código de resposta malsucedido.
+        errorMessage = `O backend retornou o código ${error.status}, corpo: ${error.error}`;
+    }
+
+    return throwError(errorMessage);
+}
+
+getToken(): string | null {
+  return localStorage.getItem('token');
+}
+
+decodedToken() {
+  const jwtHelper = new JwtHelperService();
+  const token = this.getToken();
+  return token ? jwtHelper.decodeToken(token) : null;
+}
+
+getLoggedUserId(): number | null {
+  const payload = this.decodedToken();
+  return payload && payload.UserId ? +payload.UserId : null;
+}
+
+getLoggedUserType(): string {
+  const payload = this.decodedToken();
+  return payload && payload.UserType ? payload.UserType : '';
+}
+//getUserInfo(): Observable<Users> {
+  //const url = `${this.apiUrl_User}`; // Substitua com o endpoint real da sua API
+
+  //return this.http.get<Users>(url);
+//}
   resetForm(form: NgForm) {
     form.form.reset();
     this.formData = new EntrevistaDTO();
